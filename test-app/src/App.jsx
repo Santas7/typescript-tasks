@@ -1,4 +1,5 @@
 import './App.css'
+import TaskDopOne from './components/TaskDopOne'
 import TaskFour from './components/TaskFour'
 import TaskOne from './components/TaskOne'
 import TaskTwo from './components/TaskThree'
@@ -8,7 +9,8 @@ function App() {
     <>
       {/* <TaskOne/> */}
       {/* <TaskTwo/> */}
-      <TaskFour/>
+      {/* <TaskFour/> */}
+      <TaskDopOne/>
     </>
   )
 }
