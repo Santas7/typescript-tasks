@@ -1,10 +1,10 @@
 
 import { useState } from 'react'
 import './App.css'
-import { Signin } from './components/Signin/Signin'
-import { Signup } from './components/Signup/Signup'
+import Signin from './components/Signin/Signin'
+import Signup from './components/Signup/Signup'
 
-function App() {
+export default function App() {
   const [type, setType] = useState('signin')
 
   function handleSigninSubmit(data) {
@@ -32,5 +32,3 @@ function App() {
     </>
   )
 }
-
-export default App
