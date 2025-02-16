@@ -66,3 +66,29 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+li {
+  list-style-type: none;
+  text-decoration: none;
+}
+
+li.card {
+    margin: 10px;
+
+    width: 200px;
+    height: 200px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    background-color: #161616;
+    border: 1px solid rgb(68, 68, 68);
+    border-radius: 5px;
+    padding: 15px;
+    color: #fff;
+    transition: all 0.2s ease-in-out;
+}
+
+li.card:hover {
+  transform: scale(1.03);
+}
