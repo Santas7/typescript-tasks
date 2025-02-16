@@ -3,6 +3,7 @@ import { paths } from "../core/constants/paths";
 import HomePage from "../pages/home/HomePage";
 import CategoryPage from "../pages/category/CategoryPage";
 import DetailsPage from "../pages/details/DetailsPage";
+import NotFound from "../pages/not-found/NotFound";
 
 export default function MainRouter() {
     return (
@@ -13,6 +14,7 @@ export default function MainRouter() {
             <Route path={paths.episodes} element={<CategoryPage />} />
             <Route path={paths.episodes} element={<CategoryPage />} />
             <Route path={paths.detail(':category', ':id')} element={<DetailsPage />} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 }
