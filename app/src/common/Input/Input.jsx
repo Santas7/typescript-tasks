@@ -15,6 +15,7 @@ export default function Input({
   error = '',
   icon = null,
   radius = 'md',
+  label = '',
   size = 'md',
   ...rest
 }) {
@@ -34,6 +35,7 @@ export default function Input({
           onChange={onChange}
           onClick={onClick}
           disabled={disabled}
+          label={label}
           className={`
             ${styles.input} 
             ${styles[size]} 
