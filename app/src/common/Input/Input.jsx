@@ -1,27 +1,52 @@
-export default function Input( {
-    id,
-    className,
-    name,
-    type,
-    placeholder,
-    required,
-    onChange,
-    onClick,
-    checked,
-    value }) {
+import styles from './Input.module.scss';
 
-    return (
-        <input 
-            id={id}
-            className={className}
-            name={name}
-            type={type}
-            placeholder={placeholder}
-            required={required}
-            onChange={onChange}
-            onClick={onClick}
-            value={value}
-            checked={checked}
+export default function Input({
+  id,
+  className = '',
+  name,
+  type = 'text',
+  placeholder = '',
+  required = false,
+  onChange,
+  onClick,
+  value,
+  checked,
+  disabled = false,
+  error = '',
+  icon = null,
+  radius = 'md',
+  size = 'md',
+  ...rest
+}) {
+  return (
+    <div className={`${styles.wrapper} ${className}`}>
+      <div className={styles.inputContainer}>
+        {icon && <span className={styles.icon}>{icon}</span>}
+
+        <input
+          id={id}
+          name={name}
+          type={type}
+          placeholder={placeholder}
+          required={required}
+          value={value}
+          checked={checked}
+          onChange={onChange}
+          onClick={onClick}
+          disabled={disabled}
+          className={`
+            ${styles.input} 
+            ${styles[size]} 
+            ${styles[radius]} 
+            ${icon ? styles.withIcon : ''} 
+            ${disabled ? styles.disabled : ''} 
+            ${error ? styles.error : ''}
+          `}
+          {...rest}
         />
-    )
+      </div>
+
+      {error && <span className={styles.errorText}>{error}</span>}
+    </div>
+  );
 }
