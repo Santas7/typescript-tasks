@@ -2,19 +2,18 @@ import { useNavigate } from "react-router-dom"
 
 export default function Categories() {
     const navigate = useNavigate()
-    function go(id) {
-        // console.log(id)
-        navigate(`/categories/${id}`)
+    function go(name) {
+        navigate(`/categories/${name}`)
     }
     
     return (
         <div>
-            <h2>Раздел Categories</h2>
+            <h2>Категории</h2>
             <div>
                 <ul>
-                    <li>Категория 1 <button onClick={() => go(1)}>Посмотреть</button></li>
-                    <li>Категория 2 <button onClick={() => go(2)}>Посмотреть</button></li>
-                    <li>Категория 3 <button onClick={() => go(3)}>Посмотреть</button></li> 
+                    <li>character <button onClick={() => go("character")}>Посмотреть</button></li>
+                    <li>location <button onClick={() => go("location")}>Посмотреть</button></li>
+                    <li>episode <button onClick={() => go("episode")}>Посмотреть</button></li> 
                 </ul>
                 <button>Показать подкатегории</button>
             </div>

@@ -1,27 +1,34 @@
 import './App.css'
-import Signin from './components/Login/Login'
 import { Route, Routes } from 'react-router-dom'
 import AuthContextProvider from './context/AuthContext'
 import Navbar from './components/Navbar/Navbar'
-import Categories from './components/Categories/Categories'
-import Detail from './components/Categories/Detail/Detail'
 import PrivateRoute from './routes/PrivateRoute'
-import Login from './components/Login/Login'
+import ErrorBoundary from './common/ErrorBoundary/ErrorBoundary'
+import { lazy, Suspense } from 'react'
+
+const Login = lazy(() => import('./components/Login/Login'))
+const Categories = lazy(() => import('./components/Categories/Categories'))
+const Detail = lazy(() => import('./components/Categories/Detail/Detail'))
+
 
 export default function App() {
 
   return (
     <>
       <AuthContextProvider>
-        <Navbar/>
-        <Routes>
-          <Route path="/signin" element={<Login />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/categories/:id" element={<Detail />} />
-          </Route>
-          <Route path="*" element={<Signin />} />
-        </Routes>
+        <ErrorBoundary>
+          <Suspense fallback={<div>Загрузка...</div>}>
+            <Navbar/>
+            <Routes>
+              <Route path="/signin" element={<Login />} />
+              <Route element={<PrivateRoute />}>
+                <Route path="/categories" element={<Categories />} />
+                <Route path="/categories/:name" element={<Detail />} />
+              </Route>
+              <Route path="*" element={<Login />} />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
       </AuthContextProvider>
     </>
   )
