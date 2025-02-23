@@ -1,34 +1,28 @@
-
-import { useState } from 'react'
 import './App.css'
-import Signin from './components/Signin/Signin'
-import Signup from './components/Signup/Signup'
+import Signin from './components/Login/Login'
+import { Route, Routes } from 'react-router-dom'
+import AuthContextProvider from './context/AuthContext'
+import Navbar from './components/Navbar/Navbar'
+import Categories from './components/Categories/Categories'
+import Detail from './components/Categories/Detail/Detail'
+import PrivateRoute from './routes/PrivateRoute'
+import Login from './components/Login/Login'
 
 export default function App() {
-  const [type, setType] = useState('signin')
-
-  function handleSigninSubmit(data) {
-    console.log("#### Signin data: ", data)
-  }
-
-  function handleSignupSubmit(data) {
-    console.log("#### Signup data: ", data)
-  }
 
   return (
     <>
-      <div>
-        <h1>Welcome!:D</h1>
-        {type === 'signin' 
-          ? <Signin onSubmit={handleSigninSubmit}/> 
-          : <Signup onSubmit={handleSignupSubmit}/> 
-        }
-        <br/>
-        <button style={{backgroundColor: type === 'signin' ? 'green' : 'red'}} onClick={() => setType('signin')}>Отобразить раздел Войти</button>
-        <br/><br/>
-        <button style={{backgroundColor: type === 'signin' ? 'red' : 'green'}} onClick={() => setType('signup')}>Отобразить раздел Зарегистрироваться</button>
-      </div>
-      
+      <AuthContextProvider>
+        <Navbar/>
+        <Routes>
+          <Route path="/signin" element={<Login />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/categories/:id" element={<Detail />} />
+          </Route>
+          <Route path="*" element={<Signin />} />
+        </Routes>
+      </AuthContextProvider>
     </>
   )
 }
