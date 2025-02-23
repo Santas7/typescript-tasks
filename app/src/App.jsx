@@ -1,5 +1,4 @@
 import './App.css'
-import Signin from './components/Login/Login'
 import { Route, Routes } from 'react-router-dom'
 import AuthContextProvider from './context/AuthContext'
 import Navbar from './components/Navbar/Navbar'
@@ -20,7 +19,7 @@ export default function App() {
             <Route path="/categories" element={<Categories />} />
             <Route path="/categories/:id" element={<Detail />} />
           </Route>
-          <Route path="*" element={<Signin />} />
+          <Route path="*" element={<Login />} />
         </Routes>
       </AuthContextProvider>
     </>
