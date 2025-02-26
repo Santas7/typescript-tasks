@@ -1,9 +1,10 @@
 import { useParams } from 'react-router-dom'
 import { useRef, useEffect } from 'react'
-import { useLoadInfo } from '../../../hooks/useLoadInfo'
+import { useLoadInfo } from '../../hooks/useLoadInfo'
 
-export default function Detail() {
+export default function DetailPage() {
   const { name } = useParams()
+  console.log(name)
   const { data, loading, hasMore, loadMore } = useLoadInfo(name)
   const observerRef = useRef()
 

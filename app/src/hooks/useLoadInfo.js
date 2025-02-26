@@ -6,6 +6,8 @@ export const useLoadInfo = (name) => {
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  
+  // console.log(name, page, data)
 
   const loadMore = useCallback(() => {
     if (loading || !hasMore) return

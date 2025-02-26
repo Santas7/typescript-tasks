@@ -1,9 +1,9 @@
 import { useState } from "react"
-import Input from "../../common/Input/Input"
+import Input from "../../components/Input/Input"
 import { useAuth } from "../../context/AuthContext"
 import { useNavigate } from "react-router-dom"
 
-export default function Login() {
+export default function LoginPage() {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
