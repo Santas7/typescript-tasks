@@ -6,10 +6,11 @@ import PrivateRoute from './routes/PrivateRoute'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import { lazy, Suspense } from 'react'
 
-const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'))
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage/NotFoundPage'))
-const CategoriesPage = lazy(() => import('./pages/CategoriesPage/CategoriesPage'))
-const DetailPage = lazy(() => import('./pages/DetailPage/DetailPage'))
+
+const LoginPage = lazy(() => import('@pages').then(module => ({ default: module.LoginPage })))
+const NotFoundPage = lazy(() => import('@pages').then(module => ({ default: module.NotFoundPage })))
+const CategoriesPage = lazy(() => import('@pages').then(module => ({ default: module.CategoriesPage })))
+const DetailPage = lazy(() => import('@pages').then(module => ({ default: module.DetailPage })))
 
 
 export default function App() {
