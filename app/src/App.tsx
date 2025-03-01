@@ -5,6 +5,7 @@ import Notes from "./pages/notes-page/NotesPage";
 import { AuthContext } from "./context/AuthContext";
 import NotFoundPage from "./pages/not-found-page/NotFoundPage";
 
+
 export default function App() {
   const auth = useContext(AuthContext);
 

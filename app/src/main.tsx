@@ -7,15 +7,16 @@ import { BrowserRouter } from "react-router-dom";
 import '@mantine/core/styles.css';
 import { MantineProvider } from '@mantine/core';
 import { AuthProvider } from './context/AuthContext.tsx';
+import { NotesProvider } from './context/NotesContext.tsx';
 
 
 createRoot(document.getElementById('root')!).render(
   <MantineProvider>
     <BrowserRouter>
       <AuthProvider>
-        <MantineProvider>
-          <App />
-        </MantineProvider>
+        <NotesProvider>
+            <App />
+        </NotesProvider>
       </AuthProvider>
     </BrowserRouter>
   </MantineProvider>

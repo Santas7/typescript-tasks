@@ -1,7 +1,16 @@
+import { Grid } from "@mantine/core";
+import Sidebar from "../../components/sidebar/Sidebar";
+import Workspace from "../../components/workspace/Workspace";
+
 export default function NotesPage() {
-    return (
-        <div>
-            <h1>NotesPage</h1>
-        </div>
-    );
+  return (
+    <Grid style={{ height: "100vh" }}>
+      <Grid.Col span={3}>
+        <Sidebar />
+      </Grid.Col>
+      <Grid.Col span={9}>
+        <Workspace />
+      </Grid.Col>
+    </Grid>
+  );
 }
