@@ -46,12 +46,7 @@ export default defineConfig({
         dir: 'ltr',
         iarc_rating_id: 'e84d39d1-0f3b-4a22-8d48-3c69d39d9082',
         prefer_related_applications: false,
-        related_applications: [
-          {
-            platform: 'play',
-            id: 'com.app.app'
-          }
-        ],
+        related_applications: [],
         scope_extensions: [
           {
             origin: '*.app.com'
