@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate', 
+      registerType: 'autoUpdate',
       manifest: {
         name: 'App',
         short_name: 'App',
@@ -18,16 +18,47 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: '/icon-192x192.png', 
+            src: '/icon-192x192.png',
             sizes: '192x192',
             type: 'image/png',
+            purpose: 'any'
           },
           {
-            src: '/icon-512x512.png', 
+            src: '/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-          },
+            purpose: 'any'
+          }
         ],
+        id: '/?source=pwa',
+        launch_handler: {
+          client_mode: 'auto'
+        },
+        orientation: 'portrait',
+        screenshots: [
+          {
+            src: '/screenshot1.png',
+            sizes: '1280x720',
+            type: 'image/png'
+          }
+        ],
+        categories: ['productivity'],
+        dir: 'ltr',
+        iarc_rating_id: 'e84d39d1-0f3b-4a22-8d48-3c69d39d9082',
+        prefer_related_applications: false,
+        related_applications: [
+          {
+            platform: 'play',
+            id: 'com.app.app'
+          }
+        ],
+        scope_extensions: [
+          {
+            origin: '*.app.com'
+          }
+        ],
+        lang: 'ru-RU',
+        scope: '/'
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,png,jpg,svg}'],
