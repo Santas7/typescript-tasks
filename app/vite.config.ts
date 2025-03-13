@@ -18,13 +18,13 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: '/icon-192x192.png',
+            src: '/192x192.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any'
           },
           {
-            src: '/icon-512x512.png',
+            src: '/512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any'
@@ -38,7 +38,7 @@ export default defineConfig({
         screenshots: [
           {
             src: '/screenshot1.png',
-            sizes: '1280x720',
+            sizes: '2545x1218',
             type: 'image/png'
           }
         ],
