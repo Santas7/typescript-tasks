@@ -1,26 +1,49 @@
-import { Card, Text } from "@mantine/core";
+import { useState } from "react";
+import { Group, Text, Input } from "@mantine/core";
+import { ListItemProps } from "../../types/types-interfaces";
 
-interface ListItemProps {
-  note: { id: string; title: string };
-  isSelected: boolean;
-  onSelect: () => void;
-}
 
-export default function ListItem({ note, isSelected, onSelect }: ListItemProps) {
+export default function ListItem({ note, isSelected, onSelect, updateTitle }: ListItemProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [title, setTitle] = useState(note.title);
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
+
+  const handleTitleSubmit = () => {
+    if (title.trim() !== "") {
+      updateTitle(note.id, title);
+    }
+    setIsEditing(false);
+  };
+
   return (
-    <Card
-      shadow="sm"
-      p="sm"
-      onClick={onSelect}
+    <Group
+      onClick={(e) => {
+        console.log("ListItem clicked, calling onSelect for:", note.id); 
+        e.stopPropagation(); 
+        onSelect();
+      }}
       style={{
         cursor: "pointer",
-        backgroundColor: isSelected ? "#48484A" : "#2C2C2E", // Выделение активного
-        color: "white",
-        borderRadius: "8px",
-        transition: "background-color 0.2s ease",
+        padding: "8px",
+        backgroundColor: isSelected ? "#333" : "transparent",
+        borderRadius: "5px",
       }}
     >
-      <Text weight={500}>{note.title}</Text>
-    </Card>
+      {isEditing ? (
+        <Input
+          value={title}
+          onChange={handleTitleChange}
+          onBlur={handleTitleSubmit}
+          onKeyPress={(e) => e.key === "Enter" && handleTitleSubmit()}
+          autoFocus
+        />
+      ) : (
+        <Text
+          onDoubleClick={() => setIsEditing(true)}
+          style={{ fontWeight: "bold" }}
+        >{title}</Text>
+      )}
+    </Group>
   );
 }

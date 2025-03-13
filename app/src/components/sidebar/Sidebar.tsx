@@ -1,68 +1,114 @@
 import { useState } from "react";
-import { Card, Stack, ActionIcon, ScrollArea, Group, Text } from "@mantine/core";
-import { Edit, Trash } from "react-feather";
-import { useNotes } from "../../hooks/useNotes";
-import ListItem from "../list-item/ListItem";
-import SearchBox from "../search-box/SearchBox";
+import {
+  AppShell,
+  ActionIcon,
+  SegmentedControl,
+  Text,
+  Tooltip,
+} from "@mantine/core";
+import { FaSignOutAlt } from "react-icons/fa";
+import styles from "./Sidebar.module.scss";
 import ConfirmModal from "../confirm-modal/ConfirmModal";
+import { useNotes } from "../../hooks/useNotes";
+import { useAuth } from "../../hooks/useAuth";
+import NotesPanel from "./notes-panel/NotesPanel";
+import { SearchPanel } from "./search-panel/SearchPanel";
+
 
 export default function Sidebar() {
-  const { notes, selectedNoteId, setSelectedNoteId, addNote, deleteNote } = useNotes();
+  const { notes, selectedNoteId, setSelectedNoteId, addNote, deleteNote, updateTitle } = useNotes();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [section, setSection] = useState<"notes" | "settings">("notes");
+  const { isAuthenticated, logout } = useAuth();
 
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleCloseModal = () => setIsConfirmOpen(false);
+
   return (
-    <Card 
-      withBorder 
-      shadow="sm" 
-      p="sm" 
-      style={{ 
-        display: "flex", 
-        flexDirection: "column", 
-        height: "100vh", 
-        backgroundColor: "#1e1e1e", 
-        color: "white" 
+    <AppShell
+      navbar={{
+        width: 320,           
+        breakpoint: "sm",    
+        collapsed: { mobile: false }, 
       }}
+      padding="md"
     >
+      <AppShell.Navbar p="md" className={styles.sidebar}>
+        <div className={styles.header}>
+          <Text fw={500} size="sm" className={styles.title} mb="xs">ANDREY'S APP:D</Text>
 
-      <Group position="apart" mb="sm">
-        <SearchBox onSearch={setSearchQuery} />
-        <Group>
-          <ActionIcon variant="subtle" onClick={addNote} title="Новая заметка">
-            <Edit size={18} />
-          </ActionIcon>
-          <ActionIcon variant="subtle" onClick={() => setIsConfirmOpen(true)} title="Удалить заметку">
-            <Trash size={18} />
-          </ActionIcon>
-        </Group>
-      </Group>
+          {isAuthenticated && (
+            <div className={styles.userInfo}>
+              <div className={styles.userAvatar}></div>
+              <div>
+                <Text fw={500} size="sm" color="white">
+                  Andrei
+                </Text>
+                <Text size="xs" color="#b0b0b0">
+                  1@1
+                </Text>
+              </div>
+              <Tooltip label="Выйти" withArrow>
+                <ActionIcon
+                  variant="filled"
+                  color="red"
+                  size="lg"
+                  radius="md"
+                  className={styles.logoutButton}
+                  onClick={logout}
+                >
+                  <FaSignOutAlt size={18} />
+                </ActionIcon>
+              </Tooltip>
+            </div>
+          )}
 
-      <ScrollArea style={{ flex: 1 }}>
-        <Stack spacing="xs">
-          {filteredNotes.map((note) => (
-            <ListItem 
-              key={note.id} 
-              note={note} 
-              isSelected={note.id === selectedNoteId}
-              onSelect={() => setSelectedNoteId(note.id)}
-            />
-          ))}
-        </Stack>
-      </ScrollArea>
+          <SegmentedControl
+            value={section}
+            onChange={(value) => setSection(value as "notes" | "settings")}
+            transitionTimingFunction="ease"
+            fullWidth
+            mt="md"
+            data={[
+              { label: "Заметки", value: "notes" },
+              { label: "Настройки", value: "settings" },
+            ]}
+            className={styles.segmentedControl}
+          />
+        </div>
 
-      <ConfirmModal
-        opened={isConfirmOpen}
-        onConfirm={() => {
-          if (selectedNoteId) {
-            deleteNote(selectedNoteId);
-          }
-          setIsConfirmOpen(false);
-        }}
-      />
-    </Card>
+        <NotesPanel 
+          styles={styles}
+          section={section}
+          addNote={addNote}
+          selectedNoteId={selectedNoteId}
+          filteredNotes={filteredNotes}
+          setSelectedNoteId={setSelectedNoteId}
+          setIsConfirmOpen={setIsConfirmOpen}
+          updateTitle={updateTitle} 
+        />
+
+        <SearchPanel
+          styles={styles}
+          setSearchQuery={setSearchQuery}
+        />
+
+        <ConfirmModal
+          opened={isConfirmOpen}
+          onConfirm={() => {
+            if (selectedNoteId) {
+              deleteNote(selectedNoteId);
+              setSelectedNoteId(null);
+            }
+            setIsConfirmOpen(false);
+          }}
+          onClose={handleCloseModal}
+        />
+      </AppShell.Navbar>
+    </AppShell>
   );
 }

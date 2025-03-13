@@ -22,7 +22,7 @@ export default function LoginPage() {
   return (
     <Container size={400} my={40}>
       <Paper shadow="md" p={30} radius="md" withBorder>
-        <Title align="center">Вход в систему</Title>
+        <Title ta="center">Вход в систему</Title>
         {error && <Alert color="red">{error}</Alert>}
         <form onSubmit={handleSubmit}>
           <TextInput
@@ -48,5 +48,4 @@ export default function LoginPage() {
       </Paper>
     </Container>
   );
-};
-
+}

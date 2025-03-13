@@ -6,8 +6,8 @@ export default function NotFoundPage() {
 
   return (
     <Center style={{ height: "100vh" }}>
-      <Stack align="center" spacing="md">
-        <Text size="xl" weight={700} color="red">
+      <Stack align="center" gap="md">
+        <Text size="xl" fw={700} color="red">
           404 - Страница не найдена
         </Text>
         <Button onClick={() => navigate("/notes")} variant="filled" color="blue">

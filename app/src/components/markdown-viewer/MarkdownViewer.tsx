@@ -1,10 +1,8 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Card } from "@mantine/core";
+import { MarkdownViewerProps } from "../../types/types-interfaces";
 
-interface MarkdownViewerProps {
-  content: string;
-}
 
 export default function MarkdownViewer({ content }: MarkdownViewerProps) {
   return (

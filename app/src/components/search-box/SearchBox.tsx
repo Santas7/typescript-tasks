@@ -1,9 +1,7 @@
 import { TextInput } from "@mantine/core";
 import { useState } from "react";
+import { SearchBoxProps } from "../../types/types-interfaces";
 
-interface SearchBoxProps {
-  onSearch: (query: string) => void;
-}
 
 export default function SearchBox({ onSearch }: SearchBoxProps) {
   const [query, setQuery] = useState("");

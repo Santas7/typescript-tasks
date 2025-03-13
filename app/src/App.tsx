@@ -9,9 +9,7 @@ import NotFoundPage from "./pages/not-found-page/NotFoundPage";
 export default function App() {
   const auth = useContext(AuthContext);
 
-  if (!auth) {
-    return null; 
-  }
+  if (!auth) return null; 
 
   return (
     <Routes>
