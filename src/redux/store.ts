@@ -8,7 +8,10 @@ import { RootState } from '../types/types';
 type AppThunkDispatch = ThunkDispatch<RootState, never, AnyAction>;
 
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = createStore(
+    rootReducer, 
+    applyMiddleware(thunk)
+);
 
 export default store;
 
