@@ -1,4 +1,5 @@
 import { memo, useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
 import { Col, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { ContactDto } from 'src/types/dto/ContactDto';
@@ -6,29 +7,33 @@ import { GroupContactsDto } from 'src/types/dto/GroupContactsDto';
 import { GroupContactsCard } from 'src/components/GroupContactsCard';
 import { Empty } from 'src/components/Empty';
 import { ContactCard } from 'src/components/ContactCard';
-import { useGetContactsQuery, useGetGroupsQuery } from '../services/api';
+import { contactsStore } from '../stores/ContactsStore';
 
-export const GroupPage = memo(() => {
+const GroupPage = observer(() => {
   const { groupId } = useParams<{ groupId: string }>();
-  const { data: contacts, isLoading: contactsLoading } = useGetContactsQuery();
-  const { data: groups, isLoading: groupsLoading } = useGetGroupsQuery();
   const [groupContacts, setGroupContacts] = useState<GroupContactsDto | undefined>();
   const [filteredContacts, setContacts] = useState<ContactDto[]>([]);
 
   useEffect(() => {
-    if (groups && contacts && groupId) {
-      const findGroup = groups.find((group) => group.id === groupId);
+    contactsStore.fetchContacts();
+    contactsStore.fetchGroups();
+  }, []);
+
+  useEffect(() => {
+    if (groupId) {
+      const findGroup = contactsStore.groups.find((group) => group.id === groupId);
       setGroupContacts(findGroup);
       setContacts(() => {
         if (findGroup) {
-          return contacts.filter((contact) => findGroup.contactIds.includes(contact.id));
+          return contactsStore.contacts.filter((contact) => findGroup.contactIds.includes(contact.id));
         }
         return [];
       });
     }
-  }, [groupId, contacts, groups]);
+  }, [groupId, contactsStore.contacts, contactsStore.groups]);
 
-  if (contactsLoading || groupsLoading) return <p>Загрузка...</p>;
+  if (contactsStore.loading) return <p>Загрузка...</p>;
+  if (contactsStore.error) return <p>Ошибка: {contactsStore.error}</p>;
 
   return (
     <Row className="g-4">
@@ -57,3 +62,5 @@ export const GroupPage = memo(() => {
     </Row>
   );
 });
+
+export default memo(GroupPage);

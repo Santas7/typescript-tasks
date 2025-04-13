@@ -1,1 +1,0 @@
-export { toggleFavorite, setFilters } from '../reducers/contactsReducer';

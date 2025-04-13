@@ -1,5 +1,5 @@
-export { ContactListPage } from './ContactListPage';
+export { default as ContactListPage } from './ContactListPage';
 export { FavoritListPage } from './FavoritListPage';
-export { GroupListPage } from './GroupListPage';
-export { GroupPage } from './GroupPage';
+export { default as GroupListPage } from './GroupListPage';
+export { default as GroupPage } from './GroupPage';
 export { ContactPage } from './ContactPage';

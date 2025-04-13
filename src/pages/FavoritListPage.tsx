@@ -1,19 +1,19 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 import { Col, Row } from 'react-bootstrap';
 import { ContactCard } from 'src/components/ContactCard';
-import { useGetContactsQuery } from '../services/api';
-import { RootState } from '../types/types';
 import { ContactDto } from 'src/types/dto/ContactDto';
+import { contactsStore } from '../stores/ContactsStore';
 
-export const FavoritListPage: React.FC = () => {
-  const { data: contacts, isLoading, error } = useGetContactsQuery();
-  const { favorites } = useSelector((state: RootState) => state.contacts);
+export const FavoritListPage: React.FC = observer(() => {
+  useEffect(() => {
+    contactsStore.fetchContacts();
+  }, []);
 
-  const favoriteContacts = contacts?.filter((contact) => favorites.includes(contact.id)) || [];
+  const favoriteContacts = contactsStore.contacts.filter((contact) => contactsStore.favorites.includes(contact.id));
 
-  if (isLoading) return <p>Загрузка...</p>;
-  if (error) return <p>Ошибка загрузки данных</p>;
+  if (contactsStore.loading) return <p>Загрузка...</p>;
+  if (contactsStore.error) return <p>Ошибка: {contactsStore.error}</p>;
 
   return (
     <Row xxl={4} className="g-4">
@@ -28,4 +28,4 @@ export const FavoritListPage: React.FC = () => {
       )}
     </Row>
   );
-};
+});

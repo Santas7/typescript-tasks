@@ -4,20 +4,24 @@ import { useParams } from 'react-router-dom';
 import { ContactDto } from 'src/types/dto/ContactDto';
 import { ContactCard } from 'src/components/ContactCard';
 import { Empty } from 'src/components/Empty';
-import { useGetContactsQuery } from '../services/api';
+import { contactsStore } from '../stores/ContactsStore';
 
 export const ContactPage: FC = () => {
   const { contactId } = useParams<{ contactId: string }>();
-  const { data: contacts, isLoading } = useGetContactsQuery();
   const [contact, setContact] = useState<ContactDto | undefined>();
 
   useEffect(() => {
-    if (contacts && contactId) {
-      setContact(contacts.find(({ id }: { id: string }) => String(id) === String(contactId)));
-    }
-  }, [contactId, contacts]);
+    contactsStore.fetchContacts();
+  }, []);
 
-  if (isLoading) return <p>Загрузка...</p>;
+  useEffect(() => {
+    if (contactId) {
+      setContact(contactsStore.contacts.find(({ id }) => id === contactId));
+    }
+  }, [contactId, contactsStore.contacts]);
+
+  if (contactsStore.loading) return <p>Загрузка...</p>;
+  if (contactsStore.error) return <p>Ошибка: {contactsStore.error}</p>;
 
   return (
     <Row xxl={3}>

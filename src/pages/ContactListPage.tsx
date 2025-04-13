@@ -1,25 +1,16 @@
-import React, { memo, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 import { Col, Row } from 'react-bootstrap';
 import { ContactCard } from 'src/components/ContactCard';
 import { FilterForm, FilterFormValues } from 'src/components/FilterForm';
-import { setFilters, toggleFavorite } from '../redux/actions/contactsActions';
-import { useGetContactsQuery, useGetGroupsQuery } from '../services/api';
-import { RootState } from '../types/types';
-import { AppDispatch } from '../redux/store';
 import { ContactDto } from 'src/types/dto/ContactDto';
+import { contactsStore } from '../stores/ContactsStore';
 
-export const ContactListPage = memo(() => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { filteredContacts, filters, favorites } = useSelector((state: RootState) => state.contacts);
-  const { data: contacts, isLoading: contactsLoading, error: contactsError } = useGetContactsQuery();
-  const { data: groups, isLoading: groupsLoading, error: groupsError } = useGetGroupsQuery();
-
+const ContactListPage = observer(() => {
   useEffect(() => {
-    if (contacts) {
-      dispatch(setFilters({ filters: {}, contacts }));
-    }
-  }, [contacts, dispatch]);
+    contactsStore.fetchContacts();
+    contactsStore.fetchGroups();
+  }, []);
 
   const onSubmit = (fv: Partial<FilterFormValues>) => {
     const updatedFv: FilterFormValues = {
@@ -27,26 +18,26 @@ export const ContactListPage = memo(() => {
       groupId: String(fv.groupId),
       name: String(fv.name),
     };
-    dispatch(setFilters({ filters: updatedFv, contacts: contacts! }));
+    contactsStore.setFilters(updatedFv);
   };
 
-  let displayedContacts = filteredContacts;
-  if (filters.groupId && groups) {
-    const group = groups.find((g) => String(g.id) === String(filters.groupId));
+  let displayedContacts = contactsStore.filteredContacts;
+  if (contactsStore.filters.groupId) {
+    const group = contactsStore.groups.find((g) => String(g.id) === String(contactsStore.filters.groupId));
     if (group) {
-      displayedContacts = filteredContacts.filter((contact) =>
+      displayedContacts = contactsStore.filteredContacts.filter((contact) =>
         group.contactIds.includes(contact.id)
       );
     }
   }
 
-  if (contactsLoading || groupsLoading) return <p>Загрузка...</p>;
-  if (contactsError || groupsError) return <p>Ошибка загрузки данных</p>;
+  if (contactsStore.loading) return <p>Загрузка...</p>;
+  if (contactsStore.error) return <p>Ошибка: {contactsStore.error}</p>;
 
   return (
     <Row xxl={1}>
       <Col className="mb-3">
-        <FilterForm groupContactsList={groups || []} initialValues={{}} onSubmit={onSubmit} />
+        <FilterForm groupContactsList={contactsStore.groups} initialValues={{}} onSubmit={onSubmit} />
       </Col>
       <Col>
         <Row xxl={4} className="g-4">
@@ -54,10 +45,10 @@ export const ContactListPage = memo(() => {
             <Col key={contact.id}>
               <ContactCard contact={contact} withLink />
               <button
-                onClick={() => dispatch(toggleFavorite(contact.id))}
+                onClick={() => contactsStore.toggleFavorite(contact.id)}
                 style={{ marginTop: '8px' }}
               >
-                {favorites.includes(contact.id) ? 'Убрать из избранного' : 'Добавить в избранное'}
+                {contactsStore.favorites.includes(contact.id) ? 'Убрать из избранного' : 'Добавить в избранное'}
               </button>
             </Col>
           ))}
@@ -66,3 +57,5 @@ export const ContactListPage = memo(() => {
     </Row>
   );
 });
+
+export default React.memo(ContactListPage);
