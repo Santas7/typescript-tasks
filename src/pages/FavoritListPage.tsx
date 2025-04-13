@@ -1,24 +1,19 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
 import { ContactCard } from 'src/components/ContactCard';
-import { fetchContacts } from '../redux/actions/contactsActions';
+import { useGetContactsQuery } from '../services/api';
 import { RootState } from '../types/types';
-import { AppDispatch } from '../redux/store';
 import { ContactDto } from 'src/types/dto/ContactDto';
 
 export const FavoritListPage: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { contacts, favorites, loading, error } = useSelector((state: RootState) => state.contacts);
+  const { data: contacts, isLoading, error } = useGetContactsQuery();
+  const { favorites } = useSelector((state: RootState) => state.contacts);
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
+  const favoriteContacts = contacts?.filter((contact) => favorites.includes(contact.id)) || [];
 
-  const favoriteContacts = contacts.filter((contact) => favorites.includes(contact.id));
-
-  if (loading) return <p>Загрузка...</p>;
-  if (error) return <p>Ошибка: {error}</p>;
+  if (isLoading) return <p>Загрузка...</p>;
+  if (error) return <p>Ошибка загрузки данных</p>;
 
   return (
     <Row xxl={4} className="g-4">

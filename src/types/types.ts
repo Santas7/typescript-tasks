@@ -3,25 +3,19 @@ import { GroupContactsDto } from './dto/GroupContactsDto';
 
 export interface FilterFormValues {
   name?: string;
-  groupId?: number;
+  groupId?: string; // Changed from number to string to match GroupContactsDto['id']
 }
 
 export interface ContactsState {
-  contacts: ContactDto[];
   filteredContacts: ContactDto[];
   favorites: string[];
   filters: FilterFormValues;
-  loading: boolean;
-  error: string | null;
 }
 
-export interface GroupsState {
-  groups: GroupContactsDto[];
-  loading: boolean;
-  error: string | null;
-}
+export interface GroupsState {}
 
 export interface RootState {
   contacts: ContactsState;
   groups: GroupsState;
+  [key: string]: any;
 }

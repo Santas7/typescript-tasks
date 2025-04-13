@@ -6,27 +6,29 @@ import { GroupContactsDto } from 'src/types/dto/GroupContactsDto';
 import { GroupContactsCard } from 'src/components/GroupContactsCard';
 import { Empty } from 'src/components/Empty';
 import { ContactCard } from 'src/components/ContactCard';
-import { useSelector } from 'react-redux';
-import { RootState } from 'src/types/types';
+import { useGetContactsQuery, useGetGroupsQuery } from '../services/api';
 
 export const GroupPage = memo(() => {
-  const contactsState = useSelector((state: RootState) => state.contacts.contacts);
-  const groups = useSelector((state: RootState) => state.groups.groups);
-
   const { groupId } = useParams<{ groupId: string }>();
-  const [contacts, setContacts] = useState<ContactDto[]>(contactsState);
+  const { data: contacts, isLoading: contactsLoading } = useGetContactsQuery();
+  const { data: groups, isLoading: groupsLoading } = useGetGroupsQuery();
   const [groupContacts, setGroupContacts] = useState<GroupContactsDto | undefined>();
+  const [filteredContacts, setContacts] = useState<ContactDto[]>([]);
 
   useEffect(() => {
-    const findGroup = groups.find((group) => String(group.id) === String(groupId));
-    setGroupContacts(findGroup);
-    setContacts(() => {
-      if (findGroup) {
-        return contactsState.filter((contact) => findGroup.contactIds.includes(contact.id));
-      }
-      return [];
-    });
-  }, [groupId, contactsState, groups]); 
+    if (groups && contacts && groupId) {
+      const findGroup = groups.find((group) => group.id === groupId);
+      setGroupContacts(findGroup);
+      setContacts(() => {
+        if (findGroup) {
+          return contacts.filter((contact) => findGroup.contactIds.includes(contact.id));
+        }
+        return [];
+      });
+    }
+  }, [groupId, contacts, groups]);
+
+  if (contactsLoading || groupsLoading) return <p>Загрузка...</p>;
 
   return (
     <Row className="g-4">
@@ -41,7 +43,7 @@ export const GroupPage = memo(() => {
           </Col>
           <Col>
             <Row xxl={4} className="g-4">
-              {contacts.map((contact) => (
+              {filteredContacts.map((contact) => (
                 <Col key={contact.id}>
                   <ContactCard contact={contact} withLink />
                 </Col>

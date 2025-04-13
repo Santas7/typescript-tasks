@@ -1,19 +1,13 @@
-import { applyMiddleware } from 'redux';
-import { legacy_createStore as createStore} from 'redux'
-import { thunk, ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './reducers/rootReducer';
-import { RootState } from '../types/types';
+import { contactsApi } from '../services/api';
 
-type AppThunkDispatch = ThunkDispatch<RootState, never, AnyAction>;
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(contactsApi.middleware),
+});
 
-
-const store = createStore(
-    rootReducer, 
-    applyMiddleware(thunk)
-);
-
-export default store;
-
-export type AppDispatch = AppThunkDispatch;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 export type AppStore = typeof store;

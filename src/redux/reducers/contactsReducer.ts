@@ -1,6 +1,5 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ContactsState, FilterFormValues } from '../../types/types';
-import { DATA_CONTACT } from 'src/__data__';
-
 import { ContactDto } from '../../types/dto/ContactDto';
 
 const loadFavoritesFromLocalStorage = (): string[] => {
@@ -8,60 +7,32 @@ const loadFavoritesFromLocalStorage = (): string[] => {
     const storedFavorites = localStorage.getItem('favorites');
     return storedFavorites ? JSON.parse(storedFavorites) : [];
   } catch (error) {
-    console.error('Ошибка при загрузке favorites из localStorage:', error);
     return [];
   }
 };
 
 const initialState: ContactsState = {
-  contacts: DATA_CONTACT,
   filteredContacts: [],
-  favorites: loadFavoritesFromLocalStorage(), 
+  favorites: loadFavoritesFromLocalStorage(),
   filters: {},
-  loading: false,
-  error: null,
 };
 
-console.log("initialState: ", initialState);
-
-type Action =
-  | { type: 'FETCH_CONTACTS_REQUEST' }
-  | { type: 'FETCH_CONTACTS_SUCCESS'; payload: ContactDto[] }
-  | { type: 'FETCH_CONTACTS_FAILURE'; payload: string }
-  | { type: 'TOGGLE_FAVORITE'; payload: number }
-  | { type: 'SET_FILTERS'; payload: FilterFormValues };
-
-const contactsReducer = (state = initialState, action: Action): ContactsState => {
-  switch (action.type) {
-    case 'FETCH_CONTACTS_REQUEST':
-      return { ...state, loading: true, error: null };
-    case 'FETCH_CONTACTS_SUCCESS':
-      return {
-        ...state,
-        loading: false,
-        contacts: action.payload,
-        filteredContacts: action.payload,
-      };
-    case 'FETCH_CONTACTS_FAILURE':
-      return { ...state, loading: false, error: action.payload };
-    case 'TOGGLE_FAVORITE':
-      console.log('TOGGLE_FAVORITE');
-      console.log('State before:', state);
-      console.log('Action:', action);
+const contactsSlice = createSlice({
+  name: 'contacts',
+  initialState,
+  reducers: {
+    toggleFavorite(state, action: PayloadAction<string>) {
       const contactId = action.payload;
-      const isFavorite = state.favorites.includes(String(contactId));
-      const newFavorites = isFavorite
-        ? state.favorites.filter((id) => String(id) !== String(contactId))
+      const isFavorite = state.favorites.includes(contactId);
+      state.favorites = isFavorite
+        ? state.favorites.filter((id) => id !== contactId)
         : [...state.favorites, contactId];
-      console.log('New favorites:', newFavorites);
-      localStorage.setItem('favorites', JSON.stringify(newFavorites));
-      return {
-        ...state,
-        favorites: newFavorites as string[],
-      };
-    case 'SET_FILTERS': {
-      const filters = action.payload;
-      let filteredContacts = [...state.contacts];
+      localStorage.setItem('favorites', JSON.stringify(state.favorites));
+    },
+    setFilters(state, action: PayloadAction<{ filters: FilterFormValues; contacts: ContactDto[] }>) {
+      const { filters, contacts } = action.payload;
+      state.filters = filters;
+      let filteredContacts = [...contacts];
 
       if (filters.name) {
         const fvName = filters.name.toLowerCase();
@@ -70,15 +41,10 @@ const contactsReducer = (state = initialState, action: Action): ContactsState =>
         );
       }
 
-      return {
-        ...state,
-        filters,
-        filteredContacts,
-      };
-    }
-    default:
-      return state;
-  }
-};
+      state.filteredContacts = filteredContacts;
+    },
+  },
+});
 
-export default contactsReducer;
+export const { toggleFavorite, setFilters } = contactsSlice.actions;
+export default contactsSlice.reducer;
