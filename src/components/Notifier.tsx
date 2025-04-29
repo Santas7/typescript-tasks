@@ -17,13 +17,13 @@ export const Notifier = ({ task, open, onClose }: Props) => {
         }
 
         return () => clearTimeout(timerId);
-    }, [open]);
+    }, [open, onClose]); 
 
     if (!open) {
         return null;
     }
 
-    return(
+    return (
         <div className="blackout">
             <div className="notifier-wrapper">
                 {task}
